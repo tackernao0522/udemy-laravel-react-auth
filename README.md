@@ -70,3 +70,88 @@ class User extends Authenticatable
   protected $hidden = ['password'];
 }
 ```
+
+## 04 Routes
+
+- `$ composer remove laravel/sanctum`を実行して sanctum を削除しておく<br>
+
+* `$ php artisan migrate:fresh`を実行<br>
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::get('hello', function () {
+  return 'Hello, world';
+});
+```
+
+- `POSTMAN: localhost/api/hello`にアクセスしてみる<br>
+
+```
+Hello, world
+```
+
+- `$ php artisan make:controller AuthController`を実行<br>
+
+* `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class AuthController extends Controller
+{
+  public function hello()
+  {
+    return 'Hello from controller';
+  }
+}
+```
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::get('hello', [AuthController::class, 'hello']);
+```
+
+- `POSTMAN: localhost/api/hello`にアクセスしてみる<br>
+
+```
+Hello from controller
+```

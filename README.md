@@ -155,3 +155,73 @@ Route::get('hello', [AuthController::class, 'hello']);
 ```
 Hello from controller
 ```
+
+## 05 Register
+
+- `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthController extends Controller
+{
+  public function register(Request $request)
+  {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('password')),
+    ]);
+
+    return response($user, Response::HTTP_CREATED);
+  }
+}
+```
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+```
+
+- `POSTMAN(POST): localhost/api/register`を設定<br>
+
+* `Body`タブの`form-data`を選択<br>
+
+- `上記の`form-data`に`first_name`と`last_name`と`email`と`password`を設定して`Send`する<br>
+
+```
+{
+    "first_name": "takaki",
+    "last_name": "nakamura",
+    "email": "takaki55730317@gmail.com",
+    "updated_at": "2022-04-30T10:14:15.000000Z",
+    "created_at": "2022-04-30T10:14:15.000000Z",
+    "id": 1
+}
+```

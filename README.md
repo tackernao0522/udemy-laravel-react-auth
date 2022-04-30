@@ -428,3 +428,112 @@ class AuthController extends Controller
     "jwt": "1|6DCiPi4uXbMQhxP89p3Ed4bJWPAQ365og5WExcrC"
 }
 ```
+
+## 09 Authenticated User
+
+- `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthController extends Controller
+{
+  public function register(RegisterRequest $request)
+  {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('password')),
+    ]);
+
+    return response($user, Response::HTTP_CREATED);
+  }
+
+  public function login(Request $request)
+  {
+    if (!Auth::attempt($request->only('email', 'password'))) {
+      return \response(
+        [
+          'error' => 'Invalid Credentials!',
+        ],
+        Response::HTTP_UNAUTHORIZED
+      );
+    }
+
+    $user = Auth::user();
+
+    $token = $user->createToken('token')->plainTextToken;
+
+    return \response([
+      'jwt' => $token,
+    ]);
+  }
+
+  // 追加
+  public function user(Request $request)
+  {
+    return $request->user();
+  }
+}
+```
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('user', [AuthController::class, 'user']);
+});
+```
+
+- `POSTMAN(GET) localhost/api/user を設定`<br>
+
+* `Headers`タブを選択して`KEY`に`X-Requested-With`を入力し、`VALUE`に`XMLHttpRequest`を入力`して`Send`すると下記の結果になる<br>
+
+```
+{
+    "message": "Unauthenticated."
+}
+```
+
+- `jwt`をコピーして `Headers`の`KEY`に`Authorization`を追加入力し、`VALUE`に`Bearer 1|6DCiPi4uXbMQhxP89p3Ed4bJWPAQ365og5WExcrC`を追加入力して`Send`してみると通る<br>
+
+```
+{
+    "id": 1,
+    "first_name": "takaki",
+    "last_name": "nakamura",
+    "email": "takaki55730317@gmail.com",
+    "created_at": "2022-04-30T11:15:58.000000Z",
+    "updated_at": "2022-04-30T11:15:58.000000Z"
+}
+```

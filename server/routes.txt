@@ -1,8 +1,10 @@
-+--------+----------+---------------------+------+------------------------------------------------------------+------------+
-| Domain | Method   | URI                 | Name | Action                                                     | Middleware |
-+--------+----------+---------------------+------+------------------------------------------------------------+------------+
-|        | GET|HEAD | /                   |      | Closure                                                    | web        |
-|        | POST     | api/login           |      | App\Http\Controllers\AuthController@login                  | api        |
-|        | POST     | api/register        |      | App\Http\Controllers\AuthController@register               | api        |
-|        | GET|HEAD | sanctum/csrf-cookie |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show | web        |
-+--------+----------+---------------------+------+------------------------------------------------------------+------------+
++--------+----------+---------------------+------+------------------------------------------------------------+------------------------------------------+
+| Domain | Method   | URI                 | Name | Action                                                     | Middleware                               |
++--------+----------+---------------------+------+------------------------------------------------------------+------------------------------------------+
+|        | GET|HEAD | /                   |      | Closure                                                    | web                                      |
+|        | POST     | api/login           |      | App\Http\Controllers\AuthController@login                  | api                                      |
+|        | POST     | api/register        |      | App\Http\Controllers\AuthController@register               | api                                      |
+|        | GET|HEAD | api/user            |      | App\Http\Controllers\AuthController@user                   | api                                      |
+|        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |
+|        | GET|HEAD | sanctum/csrf-cookie |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show | web                                      |
++--------+----------+---------------------+------+------------------------------------------------------------+------------------------------------------+

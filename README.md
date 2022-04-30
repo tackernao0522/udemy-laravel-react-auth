@@ -307,3 +307,34 @@ class AuthController extends Controller
 ```
 {"message":"The given data was invalid.","errors":{"password_confirm":["The password confirm and password must match."]}}
 ```
+
+## 07 Laravel Sanctum
+
+- `$ composer require laravel/sanctum`を実行<br>
+
+* `$ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"`を実行<br>
+
+- `$ php artisan migrate`を実行<br>
+
+* `app/Models/User.php`を編集<br>
+
+```php:User.php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // 追加
+
+class User extends Authenticatable
+{
+  // 編集
+  use HasFactory, Notifiable, HasApiTokens;
+
+  protected $guarded = [];
+
+  protected $hidden = ['password'];
+}
+```

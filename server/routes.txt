@@ -1,6 +1,8 @@
-+--------+----------+--------------+------+----------------------------------------------+------------+
-| Domain | Method   | URI          | Name | Action                                       | Middleware |
-+--------+----------+--------------+------+----------------------------------------------+------------+
-|        | GET|HEAD | /            |      | Closure                                      | web        |
-|        | POST     | api/register |      | App\Http\Controllers\AuthController@register | api        |
-+--------+----------+--------------+------+----------------------------------------------+------------+
++--------+----------+---------------------+------+------------------------------------------------------------+------------+
+| Domain | Method   | URI                 | Name | Action                                                     | Middleware |
++--------+----------+---------------------+------+------------------------------------------------------------+------------+
+|        | GET|HEAD | /                   |      | Closure                                                    | web        |
+|        | POST     | api/login           |      | App\Http\Controllers\AuthController@login                  | api        |
+|        | POST     | api/register        |      | App\Http\Controllers\AuthController@register               | api        |
+|        | GET|HEAD | sanctum/csrf-cookie |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show | web        |
++--------+----------+---------------------+------+------------------------------------------------------------+------------+

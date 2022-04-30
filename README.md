@@ -338,3 +338,93 @@ class User extends Authenticatable
   protected $hidden = ['password'];
 }
 ```
+
+## 08 Login
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+```
+
+- `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthController extends Controller
+{
+  public function register(RegisterRequest $request)
+  {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('password')),
+    ]);
+
+    return response($user, Response::HTTP_CREATED);
+  }
+
+  public function login(Request $request)
+  {
+    if (!Auth::attempt($request->only('email', 'password'))) {
+      return \response(
+        [
+          'error' => 'Invalid Credentials!',
+        ],
+        Response::HTTP_UNAUTHORIZED
+      );
+    }
+
+    $user = Auth::user();
+
+    $token = $user->createToken('token')->plainTextToken;
+
+    return \response([
+      'jwt' => $token,
+    ]);
+  }
+}
+```
+
+- `POSTMAN(POST) localhost/api/loginを設定`<br>
+
+* `Body`タブを選択して`form-data`を選択する`<br>
+
+- `KEY`に`email`を入力、`VALUE`に`takaki55730317@gmail.com`を入力<br>
+
+- `KEY`に`password`を入力、`VALUE`に`password`を入力して`Send`する<br>
+
+```
+{
+    "jwt": "1|6DCiPi4uXbMQhxP89p3Ed4bJWPAQ365og5WExcrC"
+}
+```

@@ -213,7 +213,7 @@ Route::post('register', [AuthController::class, 'register']);
 
 * `Body`タブの`form-data`を選択<br>
 
-- `上記の`form-data`に`first_name`と`last_name`と`email`と`password`を設定して`Send`する<br>
+- 上記の`form-data`に`first_name`と`last_name`と`email`と`password`を設定して`Send`する<br>
 
 ```
 {
@@ -224,4 +224,86 @@ Route::post('register', [AuthController::class, 'register']);
     "created_at": "2022-04-30T10:14:15.000000Z",
     "id": 1
 }
+```
+
+## 06 Custom Requests
+
+- `$ php artisan make:request RegisterRequest`を実行<br>
+
+* `app/Http/Requests/RegisterRequest.php`を編集<br>
+
+```php:RegisterRequest.php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class RegisterRequest extends FormRequest
+{
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  public function authorize()
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
+  public function rules()
+  {
+    return [
+      'first_name' => 'required',
+      'last_name' => 'required',
+      'email' => 'required|email',
+      'password' => 'required|',
+      'password_confirm' => 'required|same:password',
+    ];
+  }
+}
+```
+
+- `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthController extends Controller
+{
+  public function register(RegisterRequest $request)
+  {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('password')),
+    ]);
+
+    return response($user, Response::HTTP_CREATED);
+  }
+}
+```
+
+- `POSTMAN(POST): localhost/api/register`のままで`Headers`タブを選択して<br>
+
+* `KEY`に`X-Requested-With`を追加入力して`VALUE`には`XMLHttpRequest`を入力して`Send`するとバリデーションが効いていることがわかる<br>
+
+`Preview`<br>
+
+```
+{"message":"The given data was invalid.","errors":{"password_confirm":["The password confirm and password must match."]}}
 ```

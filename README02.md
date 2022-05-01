@@ -244,3 +244,100 @@ class AuthController extends Controller
     "message": "success"
 }
 ```
+
+## 12 Forgot Password
+
+- `$ php artisan make:controller PasswordController`を実行<br>
+
+* `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PasswordController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+// 追記
+Route::post('forgot', [PasswordController::class, 'forgot']);
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('user', [AuthController::class, 'user']);
+  Route::post('logout', [AuthController::class, 'logout']);
+});
+```
+
+- `app/Http/Controllers/PasswordController.php`を編集<br>
+
+```php:PasswordController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
+class PasswordController extends Controller
+{
+  public function forgot(Request $request)
+  {
+    $email = $request->input('email');
+    $token = Str::random(12);
+
+    DB::table('password_resets')->insert([
+      'email' => $email,
+      'token' => $token,
+    ]);
+
+    Mail::send('reset', ['token' => $token], function (Message $message) use (
+      $email
+    ) {
+      $message->subject('Reset your password!');
+      $message->to($email);
+    });
+
+    return response([
+      'message' => 'Check your email!',
+    ]);
+  }
+}
+```
+
+- `$ touch resources/views/reset.blade.php`を実行<br>
+
+* `resources/views/reset.blade.php`を編集<br>
+
+```html:reset.blade.php
+Click
+<a href="http://localhost/reset/{{ $token }}">here</a>
+to reset your password!
+```
+
+- `POSTMAN(POST) localhost/api/forgot`を設定<br>
+
+* `Body`タブを選択し、`form-data`を選択して`KEY`に`email`を入力、`VALUE`に`takaki55730317@gmail.com`を入力して`Send`する<br>
+
+- `メールが届いているか確認する`<br>
+
+```
+{
+    "message": "Check your email!"
+}
+```

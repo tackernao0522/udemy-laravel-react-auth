@@ -3,6 +3,8 @@
 +--------+----------+---------------------+------+------------------------------------------------------------+------------------------------------------+
 |        | GET|HEAD | /                   |      | Closure                                                    | web                                      |
 |        | POST     | api/login           |      | App\Http\Controllers\AuthController@login                  | api                                      |
+|        | POST     | api/logout          |      | App\Http\Controllers\AuthController@logout                 | api                                      |
+|        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |
 |        | POST     | api/register        |      | App\Http\Controllers\AuthController@register               | api                                      |
 |        | GET|HEAD | api/user            |      | App\Http\Controllers\AuthController@user                   | api                                      |
 |        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |

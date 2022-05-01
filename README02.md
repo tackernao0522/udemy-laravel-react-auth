@@ -137,3 +137,110 @@ return [
 ```
 
 - `POSTMAN(GET) localhost/api/user`で`Headers`の`Authorization`を削除しても通るようになる<br>
+
+## 11 Logout
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('user', [AuthController::class, 'user']);
+  Route::post('logout', [AuthController::class, 'logout']);
+});
+```
+
+- `app/Http/Controllers/AuthController.php`を編集<br>
+
+```php:AuthController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
+
+class AuthController extends Controller
+{
+  public function register(RegisterRequest $request)
+  {
+    $user = User::create([
+      'first_name' => $request->input('first_name'),
+      'last_name' => $request->input('last_name'),
+      'email' => $request->input('email'),
+      'password' => Hash::make($request->input('password')),
+    ]);
+
+    return response($user, Response::HTTP_CREATED);
+  }
+
+  public function login(Request $request)
+  {
+    if (!Auth::attempt($request->only('email', 'password'))) {
+      return \response(
+        [
+          'error' => 'Invalid Credentials!',
+        ],
+        Response::HTTP_UNAUTHORIZED
+      );
+    }
+
+    $user = Auth::user();
+
+    $token = $user->createToken('token')->plainTextToken;
+
+    $cookie = cookie('jwt', $token, 60 * 24);
+
+    return \response([
+      'jwt' => $token,
+    ])->withCookie($cookie);
+  }
+
+  public function user(Request $request)
+  {
+    return $request->user();
+  }
+
+  // 追加
+  public function logout()
+  {
+    $cookie = Cookie::forget('jwt');
+
+    return \response([
+      'message' => 'success',
+    ])->withCookie($cookie);
+  }
+}
+```
+
+- `POSTMAN(POST) localhost/api/logout` を設定して`Send`する<br>
+
+```
+{
+    "message": "success"
+}
+```

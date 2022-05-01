@@ -2,6 +2,7 @@
 | Domain | Method   | URI                 | Name | Action                                                     | Middleware                               |
 +--------+----------+---------------------+------+------------------------------------------------------------+------------------------------------------+
 |        | GET|HEAD | /                   |      | Closure                                                    | web                                      |
+|        | POST     | api/forgot          |      | App\Http\Controllers\PasswordController@forgot             | api                                      |
 |        | POST     | api/login           |      | App\Http\Controllers\AuthController@login                  | api                                      |
 |        | POST     | api/logout          |      | App\Http\Controllers\AuthController@logout                 | api                                      |
 |        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |

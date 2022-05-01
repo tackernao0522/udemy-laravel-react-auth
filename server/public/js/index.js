@@ -23,7 +23,26 @@ Object.defineProperty(exports, "__esModule", ({
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var App = function App() {
-  return react_1["default"].createElement("h1", null, "Laravel SPA");
+  return react_1["default"].createElement("div", {
+    className: "App"
+  }, react_1["default"].createElement("form", {
+    className: "form-signin"
+  }, react_1["default"].createElement("h1", {
+    className: "h3 mb-3 font-weight-normal"
+  }, "Please sign in"), react_1["default"].createElement("input", {
+    type: "email",
+    className: "form-control",
+    placeholder: "Email",
+    required: true
+  }), react_1["default"].createElement("input", {
+    type: "password",
+    className: "form-control",
+    placeholder: "Password",
+    required: true
+  }), react_1["default"].createElement("button", {
+    className: "btn btn-lg btn-primary btn-block w-100",
+    type: "submit"
+  }, "Sign in")));
 };
 
 exports["default"] = App;

@@ -379,3 +379,128 @@ const App = () => {
 
 export default App
 ```
+
+## 17 Navigation
+
+- `$ mkdir resources/ts/components && touch $_/Nav.tsx`を実行<br>
+
+* `resources/ts/components/Nav.tsx`を編集<br>
+
+```tsx:Nav.tsx
+import React from 'react'
+
+export const Nav = () => {
+  return (
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+      <ul className="navbar-nav mr-auto">
+        <li className="nav-item">
+          <a href="#" className="nav-link">
+            Home
+          </a>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+```
+
+- `resources/ts/App.tsx`を編集<br>
+
+```tsx:App.tsx
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Nav } from './components/Nav'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
+
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
+}
+
+export default App
+```
+
+- `resources/sass/app.scss`を編集<br>
+
+```scss:app.scss
+// 編集
+.App,
+#app {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type='email'] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type='password'] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+```
+
+- `resources/ts/components/Nav.tsx`を編集<br>
+
+```tsx:Nav.tsx
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+export const Nav = () => {
+  return (
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+      <ul className="navbar-nav mr-auto">
+        <li className="nav-item">
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
+        </li>
+      </ul>
+
+      <ul className="navbar-nav my-2 my-lg-0">
+        <li className="nav-item">
+          <Link to="/login" className="nav-link">
+            Login
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link to="register" className="nav-link">
+            Register
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+```

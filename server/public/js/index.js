@@ -24,6 +24,8 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 
+var Nav_1 = __webpack_require__(/*! ./components/Nav */ "./resources/ts/components/Nav.tsx");
+
 var Home_1 = __importDefault(__webpack_require__(/*! ./pages/Home */ "./resources/ts/pages/Home.tsx"));
 
 var Login_1 = __importDefault(__webpack_require__(/*! ./pages/Login */ "./resources/ts/pages/Login.tsx"));
@@ -33,7 +35,7 @@ var Register_1 = __importDefault(__webpack_require__(/*! ./pages/Register */ "./
 var App = function App() {
   return react_1["default"].createElement("div", {
     className: "App"
-  }, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
+  }, react_1["default"].createElement(react_router_dom_1.BrowserRouter, null, react_1["default"].createElement(Nav_1.Nav, null), react_1["default"].createElement(react_router_dom_1.Routes, null, react_1["default"].createElement(react_router_dom_1.Route, {
     path: "/",
     element: react_1["default"].createElement(Home_1["default"], null)
   }), react_1["default"].createElement(react_router_dom_1.Route, {
@@ -46,6 +48,58 @@ var App = function App() {
 };
 
 exports["default"] = App;
+
+/***/ }),
+
+/***/ "./resources/ts/components/Nav.tsx":
+/*!*****************************************!*\
+  !*** ./resources/ts/components/Nav.tsx ***!
+  \*****************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.Nav = void 0;
+
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+var Nav = function Nav() {
+  return react_1["default"].createElement("nav", {
+    className: "navbar navbar-expand-md navbar-dark bg-dark"
+  }, react_1["default"].createElement("ul", {
+    className: "navbar-nav mr-auto"
+  }, react_1["default"].createElement("li", {
+    className: "nav-item"
+  }, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/",
+    className: "nav-link"
+  }, "Home"))), react_1["default"].createElement("ul", {
+    className: "navbar-nav my-2 my-lg-0"
+  }, react_1["default"].createElement("li", {
+    className: "nav-item"
+  }, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "/login",
+    className: "nav-link"
+  }, "Login")), react_1["default"].createElement("li", {
+    className: "nav-item"
+  }, react_1["default"].createElement(react_router_dom_1.Link, {
+    to: "register",
+    className: "nav-link"
+  }, "Register"))));
+};
+
+exports.Nav = Nav;
 
 /***/ }),
 

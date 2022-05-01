@@ -201,3 +201,181 @@ export default App
   border-top-right-radius: 0;
 }
 ```
+
+## 16 Routes
+
+- `$ npm i -D react-router-dom@6.2.1 @types/react-router-dom@5.3.3`を実行<br>
+
+* `$ mkdir resources/ts/pages && touch $_/Login.tsx`を実行<br>
+
+- `resources/ts/pages/Login.tsx`を編集<br>
+
+```tsx:Login.tsx
+import React from 'react'
+
+const Login = () => {
+  return (
+    <form className="form-signin">
+      <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+      <input
+        type="email"
+        className="form-control mb-2"
+        placeholder="Email"
+        required
+      />
+
+      <input
+        type="password"
+        className="form-control mb-2"
+        placeholder="Password"
+        required
+      />
+
+      <button className="btn btn-lg btn-primary btn-block w-100" type="submit">
+        Sign in
+      </button>
+    </form>
+  )
+}
+
+export default Login
+```
+
+- `resources/ts/App.tsx`を編集<br>
+
+```tsx:App.tsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Login from './pages/Login'
+
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </BrowserRouter>
+      </Routes>
+    </div>
+  )
+}
+
+export default App
+```
+
+- `$ touch resources/ts/pages/Home.tsx`を実行<br>
+
+* `resources/ts/pages/Home.tsx`を編集<br>
+
+```tsx:Home.tsx
+import React from 'react'
+
+const Home = () => {
+  return (
+    <div className="container">
+      <h1>You are not logged in!</h1>
+    </div>
+  )
+}
+
+export default Home
+```
+
+- `resources/ts/App.tsx`を編集<br>
+
+```tsx:App.tsx
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </BrowserRouter>
+      </Routes>
+    </div>
+  )
+}
+
+export default App
+```
+
+- `$ touch resources/ts/pages/Register.tsx`を実行<br>
+
+* `resources/ts/pages/Register.tsx`を編集<br>
+
+```tsx:Register.tsx
+import React from 'react'
+
+const Register = () => {
+  return (
+    <form className="form-signin">
+      <h1 className="h3 mb-3 font-weight-normal">Please register</h1>
+
+      <input className="form-control mb-2" placeholder="First Name" required />
+
+      <input className="form-control mb-2" placeholder="Last Name" required />
+
+      <input
+        type="email"
+        className="form-control mb-2"
+        placeholder="Email"
+        required
+      />
+
+      <input
+        type="password"
+        className="form-control mb-2"
+        placeholder="Password"
+        required
+      />
+
+      <input
+        type="password"
+        className="form-control mb-2"
+        placeholder="Password Confirm"
+        required
+      />
+
+      <button className="btn btn-lg btn-primary btn-block w-100" type="submit">
+        Regitster
+      </button>
+    </form>
+  )
+}
+
+export default Register
+```
+
+- `resources/ts/App.tsx`を編集<br>
+
+```tsx:App.tsx
+import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
+
+const App = () => {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
+}
+
+export default App
+```

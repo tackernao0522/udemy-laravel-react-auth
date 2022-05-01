@@ -2269,13 +2269,16 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 
 var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
 
 var App_1 = __importDefault(__webpack_require__(/*! ./App */ "./resources/ts/App.tsx"));
 
-react_dom_1["default"].render(react_1["default"].createElement(App_1["default"], null), document.getElementById("app"));
+axios_1["default"].defaults.baseURL = "http://localhost/api/";
+react_dom_1["default"].render(react_1["default"].createElement(react_1["default"].StrictMode, null, react_1["default"].createElement(App_1["default"], null)), document.getElementById("app"));
 
 /***/ }),
 
@@ -2562,6 +2565,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/reac
 
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 
+var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
 var Register = function Register() {
   var _a = (0, react_1.useState)(""),
       firstName = _a[0],
@@ -2583,16 +2588,19 @@ var Register = function Register() {
       passwordConfirm = _e[0],
       setPasswordConfirm = _e[1];
 
+  var _f = (0, react_1.useState)(false),
+      redirect = _f[0],
+      setRedirect = _f[1];
+
   var submit = function submit(e) {
     return __awaiter(void 0, void 0, void 0, function () {
-      var response;
       return __generator(this, function (_a) {
         switch (_a.label) {
           case 0:
             e.preventDefault();
             return [4
             /*yield*/
-            , axios_1["default"].post("http://localhost/api/register", {
+            , axios_1["default"].post("register", {
               first_name: firstName,
               last_name: lastName,
               email: email,
@@ -2601,8 +2609,9 @@ var Register = function Register() {
             })];
 
           case 1:
-            response = _a.sent();
-            console.log(response);
+            _a.sent();
+
+            setRedirect(true);
             return [2
             /*return*/
             ];
@@ -2610,6 +2619,12 @@ var Register = function Register() {
       });
     });
   };
+
+  if (redirect) {
+    return react_1["default"].createElement(react_router_dom_1.Navigate, {
+      to: "/login"
+    });
+  }
 
   return react_1["default"].createElement("form", {
     className: "form-signin",

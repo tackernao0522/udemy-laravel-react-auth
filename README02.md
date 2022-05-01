@@ -341,3 +341,156 @@ to reset your password!
     "message": "Check your email!"
 }
 ```
+
+## 13 Reset Password
+
+- `routes/api.php`を編集<br>
+
+```php:api.php
+<?php
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PasswordController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('forgot', [PasswordController::class, 'forgot']);
+Route::post('reset', [PasswordController::class, 'reset']);
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::get('user', [AuthController::class, 'user']);
+  Route::post('logout', [AuthController::class, 'logout']);
+});
+```
+
+- `$ php artisan make:request ResetRequest`を実行<br>
+
+* `app/Http/Requests/ResetRequest.php`を編集<br>
+
+```php:ResetRequest.php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class ResetRequest extends FormRequest
+{
+  /**
+   * Determine if the user is authorized to make this request.
+   *
+   * @return bool
+   */
+  public function authorize()
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array
+   */
+  public function rules()
+  {
+    return [
+      'token' => 'required',
+      'password' => 'required',
+      'password_confirm' => 'required|same:password',
+    ];
+  }
+}
+```
+
+- `app/Http/Controllers/PasswordController.php`を編集<br>
+
+```php:PasswordController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ResetRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+class PasswordController extends Controller
+{
+  public function forgot(Request $request)
+  {
+    $email = $request->input('email');
+    $token = Str::random(12);
+
+    DB::table('password_resets')->insert([
+      'email' => $email,
+      'token' => $token,
+    ]);
+
+    Mail::send('reset', ['token' => $token], function (Message $message) use (
+      $email
+    ) {
+      $message->subject('Reset your password!');
+      $message->to($email);
+    });
+
+    return response([
+      'message' => 'Check your email!',
+    ]);
+  }
+
+  // 追加
+  public function reset(ResetRequest $request)
+  {
+    $passwordReset = DB::table('password_resets')
+      ->where('token', $request->input('token'))
+      ->first();
+
+    if (!($user = User::where('email', $passwordReset->email)->first())) {
+      throw new NotFoundHttpException('User not found!');
+    }
+
+    $user->password = Hash::make($request->input('password'));
+    $user->save();
+
+    return response([
+      'message' => 'success',
+    ]);
+  }
+}
+```
+
+- `POSTMAN(POST) localhost/api/reset`を設定<br>
+
+* `Headers`タブを選択して、`KEY`に`X-Requested-With`を追加入力、`VALUE`に`XMLHttpRequest`を追加入力する<br>
+
+- `Body`タブを選択して、`form-data`を選択する`<br>
+
+- `KEY`に `token`と入力、`VALUE`に`ryUCg4XWjzH`と入力<br>
+
+* `KEY`に`password`と追加入力、`VALUE`に`5t5a7k3a`を入力<br>
+
+- `KEY`に`password_confirm`を追加入力、`VALUE`に`5t5a7k3a`を入力して`Send`する<br>
+
+```
+{
+    "message": "success"
+}
+```

@@ -7,6 +7,7 @@
 |        | POST     | api/logout          |      | App\Http\Controllers\AuthController@logout                 | api                                      |
 |        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |
 |        | POST     | api/register        |      | App\Http\Controllers\AuthController@register               | api                                      |
+|        | POST     | api/reset           |      | App\Http\Controllers\PasswordController@reset              | api                                      |
 |        | GET|HEAD | api/user            |      | App\Http\Controllers\AuthController@user                   | api                                      |
 |        |          |                     |      |                                                            | App\Http\Middleware\Authenticate:sanctum |
 |        | GET|HEAD | sanctum/csrf-cookie |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show | web                                      |

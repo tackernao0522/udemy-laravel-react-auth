@@ -412,3 +412,157 @@ const Home = () => {
 
 export default Home
 ```
+
+## 22 Logout
+
+- `resources/ts/pages/Home.tsx`を編集<br>
+
+```tsx:Home.tsx
+import React from 'react'
+
+const Home = ({ user }: { user: any }) => {
+  let message
+
+  if (user) {
+    message = `Hi ${user.first_name} ${user.last_name}`
+  } else {
+    message = 'You are not logged in!'
+  }
+
+  return (
+    <div className="container">
+      <h1>{message}</h1>
+    </div>
+  )
+}
+
+export default Home
+```
+
+- `resources/ts/App.tsx`を編集<br>
+
+```tsx:App.tsx
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Nav } from './components/Nav'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
+
+const App = () => {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await axios.get('user')
+
+        // console.log(response);
+        const user = response.data
+
+        setUser(user)
+      } catch (e) {
+        setUser(null)
+      }
+    })()
+  }, [])
+
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Nav user={user} />
+        <Routes>
+          <Route path="/" element={<Home user={user} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
+}
+
+export default App
+```
+
+- `resources/ts/components/Nav.tsx`を編集<br>
+
+```tsx:Nav.tsx
+import axios from 'axios'
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+export const Nav = ({ user }: { user: any }) => {
+  const logout = async () => {
+    await axios.post('logout', {})
+  }
+
+  let links
+
+  user
+    ? (links = (
+        <ul className="navbar-nav my-2 my-lg-0">
+          <li className="nav-item">
+            <Link to="/" onClick={logout} className="nav-link">
+              Logout
+            </Link>
+          </li>
+        </ul>
+      ))
+    : (links = (
+        <ul className="navbar-nav my-2 my-lg-0">
+          <li className="nav-item">
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link to="register" className="nav-link">
+              Register
+            </Link>
+          </li>
+        </ul>
+      ))
+
+  // if (user) {
+  //   links = (
+  //     <ul className="navbar-nav my-2 my-lg-0">
+  //       <li className="nav-item">
+  //         <Link to="/" onClick={logout} className="nav-link">
+  //           Logout
+  //         </Link>
+  //       </li>
+  //     </ul>
+  //   );
+  // } else {
+  //   links = (
+  //     <ul className="navbar-nav my-2 my-lg-0">
+  //       <li className="nav-item">
+  //         <Link to="/login" className="nav-link">
+  //           Login
+  //         </Link>
+  //       </li>
+  //       <li className="nav-item">
+  //         <Link to="register" className="nav-link">
+  //           Register
+  //         </Link>
+  //       </li>
+  //     </ul>
+  //   );
+  // }
+
+  return (
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+      <ul className="navbar-nav mr-auto">
+        <li className="nav-item">
+          <Link to="/" className="nav-link">
+            Home
+          </Link>
+        </li>
+      </ul>
+
+      {links}
+    </nav>
+  )
+}
+```

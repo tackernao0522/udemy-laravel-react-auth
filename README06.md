@@ -151,3 +151,13 @@ export const Reset = () => {
   )
 }
 ```
+
+## 26 Setup Redux
+
+- `$ npm i -D @reduxjs/toolkit@1.7.1`を実行<br>
+
+* `$ npm i -D react-redux@7.2.6`を実行<br>
+
+* `$ npm i -D @types/axios@0.14.0`を実行<br>
+
+* `$ npm i -D @types/react-redux@7.1.22`を実行<br>

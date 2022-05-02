@@ -3,3 +3,4 @@ docker/db/data/*
 .DS_Store
 node_modules/*
 server/public/js/index.js
+server/public/css/*

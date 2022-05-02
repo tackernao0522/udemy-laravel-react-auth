@@ -8,29 +8,36 @@ import Register from "./pages/Register";
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [login, setLogin] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get("user");
+  useEffect(
+    () => {
+      (async () => {
+        try {
+          const response = await axios.get("user");
 
-        // console.log(response);
-        const user = response.data;
+          // console.log(response);
+          const user = response.data;
 
-        setUser(user);
-      } catch (e) {
-        setUser(null);
-      }
-    })();
-  }, []);
+          setUser(user);
+        } catch (e) {
+          setUser(null);
+        }
+      })();
+    },
+    [login]
+  );
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Nav user={user} />
+        <Nav user={user} setLogin={() => setLogin(false)} />
         <Routes>
           <Route path="/" element={<Home user={user} />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={<Login setLogin={() => setLogin(true)} />}
+          />
           <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>

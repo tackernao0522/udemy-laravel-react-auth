@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Nav } from "./components/Nav";
+import { Forgot } from "./pages/Forgot";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -39,6 +40,7 @@ const App = () => {
             element={<Login setLogin={() => setLogin(true)} />}
           />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot" element={<Forgot />} />
         </Routes>
       </BrowserRouter>
     </div>

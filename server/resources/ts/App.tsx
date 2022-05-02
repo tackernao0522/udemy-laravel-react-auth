@@ -6,6 +6,7 @@ import { Forgot } from "./pages/Forgot";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import { Reset } from "./pages/Reset";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -41,6 +42,7 @@ const App = () => {
           />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
+          <Route path="/reset/:token" element={<Reset />} />
         </Routes>
       </BrowserRouter>
     </div>

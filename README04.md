@@ -332,3 +332,83 @@ const Login = () => {
 
 export default Login
 ```
+
+## 21 Authenticated User
+
+- `resources/ts/pages/Home.tsx`を編集<br>
+
+```tsx:Home.tsx
+import axios from 'axios'
+import React, { useEffect } from 'react'
+
+const Home = () => {
+  useEffect(() => {
+    ;(async () => {
+      const response = await axios.get('user')
+
+      console.log(response)
+    })()
+  }, [])
+
+  return (
+    <div className="container">
+      <h1>You are not logged in!</h1>
+    </div>
+  )
+}
+
+export default Home
+```
+
+- `resources/ts/index.tsx`を編集<br>
+
+```tsx:index.tsx
+import axios from 'axios'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
+
+axios.defaults.baseURL = 'http://localhost/api/'
+axios.defaults.withCredentials = true
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('app'),
+)
+```
+
+- `resources/ts/pages/Home.tsx`を編集<br>
+
+```tsx:Home.tsx
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+
+const Home = () => {
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const response = await axios.get('user')
+
+        // console.log(response);
+        const user = response.data
+
+        setMessage(`Hi ${user.first_name} ${user.last_name}`)
+      } catch (e) {
+        setMessage('You are not logged in!')
+      }
+    })()
+  }, [])
+
+  return (
+    <div className="container">
+      <h1>{message}</h1>
+    </div>
+  )
+}
+
+export default Home
+```

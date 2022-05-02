@@ -1,23 +1,13 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const Home = () => {
-  const [message, setMessage] = useState("");
+const Home = ({ user }: { user: any }) => {
+  let message;
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axios.get("user");
-
-        // console.log(response);
-        const user = response.data;
-
-        setMessage(`Hi ${user.first_name} ${user.last_name}`);
-      } catch (e) {
-        setMessage("You are not logged in!");
-      }
-    })();
-  }, []);
+  if (user) {
+    message = `Hi ${user.first_name} ${user.last_name}`;
+  } else {
+    message = "You are not logged in!";
+  }
 
   return (
     <div className="container">
